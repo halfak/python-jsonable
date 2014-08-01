@@ -4,6 +4,36 @@ from .self_constructor import SelfConstructor
 JSON_TYPES = {str, int, float, type(None)}
 
 class JSONable(SelfConstructor):
+    """
+    Implements a simple class interface for trivially JSONable objects.
+    
+    :Example:
+        >>> from jsonable import JSONable
+        >>>
+        >>>
+        >>> class Fruit(JSONable):
+        ...     __slots__ = ('type', 'weight')
+        ...
+        ...     def initialize(self, type, weight):
+        ...         self.type   = str(type)
+        ...         self.weight = float(weight)
+        ...
+        >>> class Pie(JSONable):
+        ...     __slots__ = ('fruit',)
+        ...
+        ...     def initialize(self, fruit):
+        ...         self.fruit = [Fruit(f) for f in fruit]
+        ...
+        ...
+        >>> pie = Pie([Fruit('apple', 10.3), Fruit('cherry', 2)])
+        >>>
+        >>> doc = pie.to_json()
+        >>> doc
+        {'fruit': [{'weight': 10.3, 'type': 'apple'}, {'weight': 2.0, 'type': 'cherry'}]}
+        >>>
+        >>> pie == Pie(doc)
+        True
+    """
     def __new__(cls, *args, **kwargs):
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             return cls.from_json(args[0])
