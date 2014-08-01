@@ -56,7 +56,7 @@ class JSONable(SelfConstructor):
     def __str__(self): return self.__repr__()
     
     def __repr__(self):
-        return util.instance.slots_repr(self)
+        return instance.slots_repr(self)
     
     def to_json(self):
         return {k:self._to_json(v) for k, v in instance.slots_items(self)}

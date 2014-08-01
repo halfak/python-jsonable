@@ -19,8 +19,9 @@ setup(
     author_email="ahalfaker@wikimedia.org",
     description=("An abstract class that supports json serialization/deserialization."),
     license="MIT",
-    url="https://github.com/halfak/jsonable",
+    url="https://github.com/halfak/JSONable-data-types",
     py_modules=['jsonable'],
+    packages=find_packages(),
     long_description=read('README.rst'),
     install_requires=[],
     classifiers=[

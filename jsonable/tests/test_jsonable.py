@@ -3,7 +3,7 @@ from nose.tools import eq_
 from ..jsonable import JSONable
 
 
-def test_jsonable():
+def test_construction_and_variables():
     
     class Bar(JSONable):
         __slots__ = ('subherp', 'subderp')
@@ -25,3 +25,18 @@ def test_jsonable():
     eq_(foo.bars, bars)
     eq_(foo, Foo(foo))
     eq_(foo, Foo(foo.to_json()))
+
+def test_repr():
+    
+    class Bar(JSONable):
+        __slots__ = ('subherp', 'subderp')
+        def initialize(self, subherp, subderp):
+            self.subherp = subherp
+            self.subderp = subderp
+        
+    
+    bar = Bar(1, "two")
+    eq_(
+        repr(bar),
+        "Bar(subherp=1, subderp='two')"
+    )
