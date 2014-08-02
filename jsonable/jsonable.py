@@ -78,3 +78,5 @@ class JSONable(SelfConstructor):
     @classmethod
     def from_json(cls, doc):
         return cls(**doc)
+    
+    _from_json = from_json
