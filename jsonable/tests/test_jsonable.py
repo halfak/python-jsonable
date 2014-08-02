@@ -18,7 +18,7 @@ def test_construction_and_variables():
             self.bars = list(Bar(b) for b in bars)
         
     herp = 5
-    bars = [Bar("string", 334.34), Bar("foo", {"derp": 3.1})]
+    bars = [Bar("string", 334.34), Bar(False, {"derp": 3.1})]
     foo = Foo(herp, bars)
     
     eq_(foo.herp, herp)

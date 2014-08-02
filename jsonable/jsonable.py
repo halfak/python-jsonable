@@ -1,7 +1,7 @@
 from . import instance
 from .self_constructor import SelfConstructor
 
-JSON_TYPES = {str, int, float, type(None)}
+JSON_TYPES = {str, int, float, type(None), bool}
 
 class JSONable(SelfConstructor):
     """
