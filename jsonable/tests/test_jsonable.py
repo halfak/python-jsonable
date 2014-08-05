@@ -1,6 +1,6 @@
 from nose.tools import eq_
 
-from ..jsonable import JSONable
+from ..jsonable import AbstractJSONable, JSONable
 
 
 def test_construction_and_variables():
@@ -40,3 +40,38 @@ def test_repr():
         repr(bar),
         "Bar(subherp=1, subderp='two')"
     )
+
+def test_abstract_construction_and_variables():
+    
+    class Bowl(JSONable):
+        __slots__ = ('fruit',)
+        def initialize(self, fruit):
+            self.fruit = [Fruit(f) for f in fruit]
+        
+    
+    
+    class Fruit(AbstractJSONable):
+        __slots__ = ('weight',)
+        def initialize(self, weight):
+            self.weight = float(weight) # lbs
+            
+    
+    class Apple(Fruit):
+        __slots__ = ('variety',)
+        def initialize(self, weight, variety):
+            super().initialize(weight)
+            self.variety = str(variety)
+        
+    
+    class Orange(Fruit):
+        __slots__ = ('radius',)
+        def initialize(self, weight, radius):
+            super().initialize(weight)
+            self.radius = float(radius) # in
+            
+        
+    orange = Orange(10.1, 2.5)
+    apple = Apple(9.2, "Honey Crisp")
+    
+    bowl = Bowl([apple, orange])
+    print(bowl.to_json())

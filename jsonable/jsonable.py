@@ -1,7 +1,10 @@
+import copy
+
 from . import instance
 from .self_constructor import SelfConstructor
 
 JSON_TYPES = {str, int, float, type(None), bool}
+
 
 class JSONable(SelfConstructor):
     """
@@ -28,8 +31,6 @@ class JSONable(SelfConstructor):
         >>> pie = Pie([Fruit('apple', 10.3), Fruit('cherry', 2)])
         >>>
         >>> doc = pie.to_json()
-        >>> doc
-        {'fruit': [{'weight': 10.3, 'type': 'apple'}, {'weight': 2.0, 'type': 'cherry'}]}
         >>>
         >>> pie == Pie(doc)
         True
@@ -80,3 +81,80 @@ class JSONable(SelfConstructor):
         return cls(**doc)
     
     _from_json = from_json
+
+
+class AbstractJSONable(JSONable):
+    """
+    Implements a simple JSONable datastructure for abstract classes.
+    
+    :Example:
+        >>> from jsonable import JSONable, AbstractJSONable
+        >>> 
+        >>> class Bowl(JSONable):
+        ...     __slots__ = ('fruit',)
+        ...     def initialize(self, fruit):
+        ...         self.fruit = [Fruit(f) for f in fruit]
+        ...
+        >>>
+        >>>
+        >>> class Fruit(AbstractJSONable):
+        ...     __slots__ = ('weight',)
+        ...     def initialize(self, weight):
+        ...         self.weight = float(weight) # lbs
+        ...
+        >>>
+        >>> class Apple(Fruit):
+        ...     __slots__ = ('variety',)
+        ...     def initialize(self, weight, variety):
+        ...         super().initialize(weight)
+        ...         self.variety = str(variety)
+        ...
+        >>> Fruit.register(Apple)
+        >>>
+        >>> class Orange(Fruit):
+        ...     __slots__ = ('radius',)
+        ...     def initialize(self, weight, radius):
+        ...         super().initialize(weight)
+        ...         self.radius = float(radius) # in
+        ...
+        >>> Fruit.register(Orange)
+        >>>
+        >>> orange = Orange(10.1, 2.5)
+        >>>
+        >>> apple = Apple(9.2, "Honey Crisp")
+        >>>
+        >>> bowl = Bowl([apple, orange])
+        >>>
+        >>> doc = bowl.to_json()
+        >>>
+        >>> bowl == Bowl(doc)
+        True
+    """
+    __slots__ = tuple()
+    
+    REGISTERED_SUB_CLASSES = {}
+    CLASS_NAME_KEY = "__class__"
+    
+    def to_json(self):
+        doc = super().to_json()
+        doc[self.CLASS_NAME_KEY] = self.__class__.__name__
+        return doc
+    
+    
+    @classmethod
+    def from_json(cls, doc):
+        if cls.CLASS_NAME_KEY in doc:
+            SubClass = cls.REGISTERED_SUB_CLASSES[doc[cls.CLASS_NAME_KEY]]
+            new_doc = copy.copy(doc)
+            del new_doc[cls.CLASS_NAME_KEY]
+            return SubClass.from_json(new_doc)
+        else:
+            return cls._from_json(doc)
+    
+    @classmethod
+    def get(cls, class_name):
+        return cls.REGISTERED_SUB_CLASSES[class_name]
+    
+    @classmethod
+    def register(cls, SubClass):
+        cls.REGISTERED_SUB_CLASSES[SubClass.__name__] = SubClass

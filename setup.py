@@ -17,7 +17,8 @@ setup(
     version=read('VERSION').strip(),
     author="Aaron Halfaker",
     author_email="ahalfaker@wikimedia.org",
-    description=("An abstract class that supports json serialization/deserialization."),
+    description=("An abstract class that supports json" +\
+                 "serialization/deserialization."),
     license="MIT",
     url="https://github.com/halfak/JSONable-data-types",
     packages=find_packages(),
@@ -25,8 +26,12 @@ setup(
     install_requires=[],
     classifiers=[
         "Development Status :: 4 - Beta",
-        "Topic :: Security",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Environment :: Other Environment",
+        "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
         "Topic :: Software Development :: Libraries :: Python Modules"
     ],
 )
