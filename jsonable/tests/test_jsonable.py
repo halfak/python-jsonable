@@ -75,3 +75,7 @@ def test_abstract_construction_and_variables():
     
     bowl = Bowl([apple, orange])
     print(bowl.to_json())
+    
+    
+    fruit = Fruit(21.1)
+    eq_(fruit, Fruit(fruit.to_json()))

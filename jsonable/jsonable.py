@@ -89,7 +89,7 @@ class AbstractJSONable(JSONable):
     
     :Example:
         >>> from jsonable import JSONable, AbstractJSONable
-        >>> 
+        >>>
         >>> class Bowl(JSONable):
         ...     __slots__ = ('fruit',)
         ...     def initialize(self, fruit):
@@ -144,7 +144,16 @@ class AbstractJSONable(JSONable):
     @classmethod
     def from_json(cls, doc):
         if cls.CLASS_NAME_KEY in doc:
-            SubClass = cls.REGISTERED_SUB_CLASSES[doc[cls.CLASS_NAME_KEY]]
+            class_name = doc[cls.CLASS_NAME_KEY]
+            if class_name in cls.REGISTERED_SUB_CLASSES:
+                SubClass = cls.REGISTERED_SUB_CLASSES[class_name]
+            elif class_name == cls.__name__:
+                SubClass = cls
+            else:
+                raise KeyError(str(class_name) +
+                               " is not a recognized subclass of " +
+                               cls.__name__)
+            
             new_doc = copy.copy(doc)
             del new_doc[cls.CLASS_NAME_KEY]
             return SubClass.from_json(new_doc)
