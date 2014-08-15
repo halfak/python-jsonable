@@ -1,7 +1,15 @@
+import pickle
+
 from nose.tools import eq_
 
 from ..jsonable import AbstractJSONable, JSONable
 
+
+class ExampleJSONable(JSONable):
+    __slots__ = ('foo', 'bar')
+    def initialize(self, foo, bar):
+        self.foo = foo
+        self.bar = bar
 
 def test_construction_and_variables():
     
@@ -25,6 +33,13 @@ def test_construction_and_variables():
     eq_(foo.bars, bars)
     eq_(foo, Foo(foo))
     eq_(foo, Foo(foo.to_json()))
+    
+
+def test_pickle():
+    bar = ExampleJSONable("wat", "herp")
+
+    eq_(bar, pickle.loads(pickle.dumps(bar)))
+
 
 def test_repr():
     

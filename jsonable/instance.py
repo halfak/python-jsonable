@@ -30,6 +30,10 @@ def slots_items(instance):
     for key in slots_keys(instance):
         yield key, getattr(instance, key)
 
+def slots_values(instance):
+    for key in slots_keys(instance):
+        yield getattr(instance, key)
+
 def slots_keys(instance):
     cls = instance.__class__
     

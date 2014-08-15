@@ -75,6 +75,12 @@ class JSONable(SelfConstructor):
             return {str(k):cls._to_json(v) for k,v in value.items()}
         else:
             raise TypeError("{0} is not json serializable.".format(type(value)))
+    
+    def __getstate__(self): return self.to_json()
+    def __getnewargs__(self):
+        return (self.to_json(), )
+    
+    #def __setstate__(self, doc): return self.intialize(**doc)
 
     @classmethod
     def from_json(cls, doc):
@@ -139,7 +145,6 @@ class AbstractJSONable(JSONable):
         doc = super().to_json()
         doc[self.CLASS_NAME_KEY] = self.__class__.__name__
         return doc
-    
     
     @classmethod
     def from_json(cls, doc):
