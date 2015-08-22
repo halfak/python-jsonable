@@ -1,1 +1,1 @@
-from .jsonable import JSONable, AbstractJSONable
+from .type import Type, Base, JSONable, AbstractJSONable

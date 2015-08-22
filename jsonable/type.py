@@ -6,10 +6,10 @@ from .self_constructor import SelfConstructor
 JSON_TYPES = {str, int, float, type(None), bool}
 
 
-class JSONable(SelfConstructor):
+class Type(SelfConstructor):
     """
     Implements a simple class interface for trivially JSONable objects.
-    
+
     :Example:
         >>> from jsonable import JSONable
         >>>
@@ -40,31 +40,31 @@ class JSONable(SelfConstructor):
             return cls.from_json(args[0])
         else:
             return super().__new__(cls, *args, **kwargs)
-    
+
     def __eq__(self, other):
         if other == None: return False
         try:
             for key in instance.slots_keys(self):
                     if getattr(self, key) != getattr(other, key): return False
-            
+
             return True
         except KeyError or AttributeError:
             return False
-        
+
     def __neq__(self, other):
         return not self.__eq__(other)
-    
+
     def __str__(self): return self.__repr__()
-    
+
     def __repr__(self):
         return instance.slots_repr(self)
-    
+
     def to_json(self):
         return {k:self._to_json(v) for k, v in instance.slots_items(self)}
-    
+
     @classmethod
     def _to_json(cls, value):
-        
+
         if type(value) in JSON_TYPES:
             return value
         elif hasattr(value, "to_json"):
@@ -75,24 +75,25 @@ class JSONable(SelfConstructor):
             return {str(k):cls._to_json(v) for k,v in value.items()}
         else:
             raise TypeError("{0} is not json serializable.".format(type(value)))
-    
+
     def __getstate__(self): return self.to_json()
     def __getnewargs__(self):
         return (self.to_json(), )
-    
+
     #def __setstate__(self, doc): return self.intialize(**doc)
 
     @classmethod
     def from_json(cls, doc):
         return cls(**doc)
-    
+
     _from_json = from_json
 
+JSONable = Type # For backwards compatibility
 
-class AbstractJSONable(JSONable):
+class Base(Type):
     """
     Implements a simple JSONable datastructure for abstract classes.
-    
+
     :Example:
         >>> from jsonable import JSONable, AbstractJSONable
         >>>
@@ -137,15 +138,15 @@ class AbstractJSONable(JSONable):
         True
     """
     __slots__ = tuple()
-    
+
     REGISTERED_SUB_CLASSES = {}
     CLASS_NAME_KEY = "__class__"
-    
+
     def to_json(self):
         doc = super().to_json()
         doc[self.CLASS_NAME_KEY] = self.__class__.__name__
         return doc
-    
+
     @classmethod
     def from_json(cls, doc):
         if cls.CLASS_NAME_KEY in doc:
@@ -158,17 +159,19 @@ class AbstractJSONable(JSONable):
                 raise KeyError(str(class_name) +
                                " is not a recognized subclass of " +
                                cls.__name__)
-            
+
             new_doc = copy.copy(doc)
             del new_doc[cls.CLASS_NAME_KEY]
             return SubClass.from_json(new_doc)
         else:
             return cls._from_json(doc)
-    
+
     @classmethod
     def get(cls, class_name):
         return cls.REGISTERED_SUB_CLASSES[class_name]
-    
+
     @classmethod
     def register(cls, SubClass):
         cls.REGISTERED_SUB_CLASSES[SubClass.__name__] = SubClass
+
+AbstractJSONable = Base # For backwards compatibilit
