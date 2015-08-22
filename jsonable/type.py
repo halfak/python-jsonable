@@ -67,7 +67,6 @@ class Type(SelfConstructor):
 
     @classmethod
     def _to_json(cls, value):
-        print(type(value))
         if type(value) in JSON_TYPES:
             return value
         elif hasattr(value, "to_json"):
