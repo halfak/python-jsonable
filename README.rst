@@ -6,18 +6,18 @@ This library provides and abstract base class ``JSONable`` which enables easy de
 * **Installation:** ``pip install jsonable``
 
 :Example:
-    
-    >>> from jsonable import JSONable
+
+    >>> import jsonable
     >>>
     >>>
-    >>> class Fruit(JSONable):
+    >>> class Fruit(jsonable.Type):
     ...     __slots__ = ('type', 'weight')
     ...
     ...     def initialize(self, type, weight):
     ...         self.type   = str(type)
     ...         self.weight = float(weight)
     ...
-    >>> class Pie(JSONable):
+    >>> class Pie(jsonable.Type):
     ...     __slots__ = ('fruit',)
     ...
     ...     def initialize(self, fruit):
