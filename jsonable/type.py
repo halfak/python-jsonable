@@ -41,6 +41,9 @@ class Type(SelfConstructor):
         else:
             return super().__new__(cls, *args, **kwargs)
 
+    def __hash__(self):
+        return hash(tuple(instance.slots_values(self)))
+
     def __eq__(self, other):
         if other == None: return False
         try:
@@ -64,12 +67,12 @@ class Type(SelfConstructor):
 
     @classmethod
     def _to_json(cls, value):
-
+        print(type(value))
         if type(value) in JSON_TYPES:
             return value
         elif hasattr(value, "to_json"):
             return value.to_json()
-        elif isinstance(value, list):
+        elif isinstance(value, list) or isinstance(value, set):
             return [cls._to_json(v) for v in value]
         elif isinstance(value, dict):
             return {str(k):cls._to_json(v) for k,v in value.items()}

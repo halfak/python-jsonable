@@ -23,7 +23,7 @@ def test_construction_and_variables():
         __slots__ = ('herp', 'bars')
         def initialize(self, herp, bars):
             self.herp = herp
-            self.bars = list(Bar(b) for b in bars)
+            self.bars = [Bar(b) for b in bars]
 
     herp = 5
     bars = [Bar("string", 334.34), Bar(False, {"derp": 3.1})]
@@ -61,7 +61,7 @@ def test_abstract_construction_and_variables():
     class Bowl(Type):
         __slots__ = ('fruit',)
         def initialize(self, fruit):
-            self.fruit = [Fruit(f) for f in fruit]
+            self.fruit = {Fruit(f) for f in fruit}
 
 
 
@@ -77,6 +77,7 @@ def test_abstract_construction_and_variables():
             super().initialize(weight)
             self.variety = str(variety)
 
+    Fruit.register(Apple)
 
     class Orange(Fruit):
         __slots__ = ('radius',)
@@ -84,13 +85,13 @@ def test_abstract_construction_and_variables():
             super().initialize(weight)
             self.radius = float(radius) # in
 
+    Fruit.register(Orange)
+
 
     orange = Orange(10.1, 2.5)
     apple = Apple(9.2, "Honey Crisp")
 
     bowl = Bowl([apple, orange])
-    print(bowl.to_json())
 
-
-    fruit = Fruit(21.1)
-    eq_(fruit, Fruit(fruit.to_json()))
+    print(Fruit.REGISTERED_SUB_CLASSES)
+    eq_(bowl, Bowl(bowl.to_json()))
