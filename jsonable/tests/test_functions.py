@@ -17,6 +17,7 @@ def test_to_json():
 
     # Iterable types
     eq_(to_json(["foo", 5.5]), ["foo", 5.5])
+    eq_(to_json(("foo", 5.5)), ["foo", 5.5])
     eq_(set(to_json({"foo", 5.5})), {"foo", 5.5})
     eq_(to_json(deque(["foo", 5.5])), ["foo", 5.5])
 
