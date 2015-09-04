@@ -11,16 +11,18 @@ class ExampleJSONable(Type):
         self.foo = foo
         self.bar = bar
 
-def test_construction_and_variables():
 
+def test_construction_and_variables():
     class Bar(Type):
         __slots__ = ('subherp', 'subderp')
+
         def initialize(self, subherp, subderp):
             self.subherp = subherp
             self.subderp = subderp
 
     class Foo(Type):
         __slots__ = ('herp', 'bars')
+
         def initialize(self, herp, bars):
             self.herp = herp
             self.bars = [Bar(b) for b in bars]
@@ -49,17 +51,19 @@ def test_repr():
             self.subherp = subherp
             self.subderp = subderp
 
-
     bar = Bar(1, "two")
+
     eq_(
         repr(bar),
         "Bar(subherp=1, subderp='two')"
     )
 
+
 def test_abstract_construction_and_variables():
 
     class Bowl(Type):
         __slots__ = ('fruit',)
+
         def initialize(self, fruit):
             self.fruit = {Fruit(f) for f in fruit}
 
@@ -67,12 +71,14 @@ def test_abstract_construction_and_variables():
 
     class Fruit(Base):
         __slots__ = ('weight',)
+
         def initialize(self, weight):
             self.weight = float(weight) # lbs
 
 
     class Apple(Fruit):
         __slots__ = ('variety',)
+
         def initialize(self, weight, variety):
             super().initialize(weight)
             self.variety = str(variety)
@@ -81,6 +87,7 @@ def test_abstract_construction_and_variables():
 
     class Orange(Fruit):
         __slots__ = ('radius',)
+
         def initialize(self, weight, radius):
             super().initialize(weight)
             self.radius = float(radius) # in

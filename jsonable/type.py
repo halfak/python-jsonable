@@ -1,6 +1,6 @@
 import copy
 
-from . import instance
+from . import functions, instance
 from .self_constructor import SelfConstructor
 
 JSON_TYPES = {str, int, float, type(None), bool}
@@ -63,26 +63,13 @@ class Type(SelfConstructor):
         return instance.slots_repr(self)
 
     def to_json(self):
-        return {k:self._to_json(v) for k, v in instance.slots_items(self)}
+        return {k:functions.to_json(v) for k, v in instance.slots_items(self)}
 
-    @classmethod
-    def _to_json(cls, value):
-        if type(value) in JSON_TYPES:
-            return value
-        elif hasattr(value, "to_json"):
-            return value.to_json()
-        elif isinstance(value, list) or isinstance(value, set):
-            return [cls._to_json(v) for v in value]
-        elif isinstance(value, dict):
-            return {str(k):cls._to_json(v) for k,v in value.items()}
-        else:
-            raise TypeError("{0} is not json serializable.".format(type(value)))
+    def __getstate__(self):
+        return self.to_json()
 
-    def __getstate__(self): return self.to_json()
     def __getnewargs__(self):
         return (self.to_json(), )
-
-    #def __setstate__(self, doc): return self.intialize(**doc)
 
     @classmethod
     def from_json(cls, doc):
@@ -90,7 +77,8 @@ class Type(SelfConstructor):
 
     _from_json = from_json
 
-JSONable = Type # For backwards compatibility
+JSONable = Type  # For backwards compatibility
+
 
 class Base(Type):
     """
