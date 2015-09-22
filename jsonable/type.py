@@ -63,7 +63,9 @@ class Type(SelfConstructor):
         return instance.slots_repr(self)
 
     def to_json(self):
-        return {k:functions.to_json(v) for k, v in instance.slots_items(self)}
+        return {k:functions.to_json(v)
+                for k, v in instance.slots_items(self)
+                if v is not None}
 
     def __getstate__(self):
         return self.to_json()
