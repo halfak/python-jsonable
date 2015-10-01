@@ -14,7 +14,7 @@ def requirements(fname):
 
 setup(
     name="jsonable",
-    version="0.3.0",
+    version="0.3.1",
     author="Aaron Halfaker",
     author_email="ahalfaker@wikimedia.org",
     description=("An abstract class that supports json" +\
