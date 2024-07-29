@@ -1,5 +1,3 @@
-from nose.tools import eq_
-
 from ..self_constructor import SelfConstructor
 
 
@@ -15,7 +13,7 @@ def test_self_construction():
     derp = "foo"
     foo = Foo(herp, derp)
     
-    eq_(foo.herp, herp)
-    eq_(foo.derp, derp)
+    assert foo.herp == herp
+    assert foo.derp == derp
     
-    eq_(foo, Foo(foo))
+    assert foo == Foo(foo)
