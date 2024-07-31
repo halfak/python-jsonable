@@ -1,23 +1,19 @@
-from nose.tools import eq_
-
 from .. import instance
 
 
 def test_simple_repr():
     
-    eq_(
-        instance.simple_repr("Classname", 'foo', 5, herp=[5]),
-        "Classname('foo', 5, herp=[5])"
-    )
+    assert (
+        instance.simple_repr("Classname", 'foo', 5, herp=[5]) ==
+        "Classname('foo', 5, herp=[5])")
     
-    eq_(
+    assert (
         instance.simple_repr("Classname",
                              ordered_kwargs=[('foo', "foo"),
                                              ('five', 5),
                                              ('herp', [5]),
-                                             ('derp', 20)]),
-        "Classname(foo='foo', five=5, herp=[5], derp=20)"
-    )
+                                             ('derp', 20)]) ==
+        "Classname(foo='foo', five=5, herp=[5], derp=20)")
 
 def test_slots_repr():
     
@@ -36,10 +32,9 @@ def test_slots_repr():
             self.derp = derp
         
     
-    eq_(
-        instance.slots_repr(SubSlottedItem("foo", 5, [5], 20)),
-        "SubSlottedItem(foo='foo', five=5, herp=[5], derp=20)"
-    )
+    assert (
+        instance.slots_repr(SubSlottedItem("foo", 5, [5], 20)) ==
+        "SubSlottedItem(foo='foo', five=5, herp=[5], derp=20)")
 
 def test_slots_items():
     
@@ -58,10 +53,9 @@ def test_slots_items():
             self.derp = derp
         
     
-    eq_(
-        list(instance.slots_items(SubSlottedItem("foo", 5, [5], 20))),
-        [("foo", "foo"), ("five", 5), ("herp", [5]), ("derp", 20)]
-    )
+    assert (
+        list(instance.slots_items(SubSlottedItem("foo", 5, [5], 20))) ==
+        [("foo", "foo"), ("five", 5), ("herp", [5]), ("derp", 20)])
 
 def test_slots_keys():
     
@@ -80,7 +74,6 @@ def test_slots_keys():
             self.derp = derp
         
     
-    eq_(
-        list(instance.slots_keys(SubSlottedItem("foo", 5, [5], 20))),
-        ["foo", "five", "herp", "derp"]
-    )
+    assert (
+        list(instance.slots_keys(SubSlottedItem("foo", 5, [5], 20))) ==
+        ["foo", "five", "herp", "derp"])

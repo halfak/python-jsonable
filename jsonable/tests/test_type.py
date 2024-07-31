@@ -1,7 +1,5 @@
 import pickle
 
-from nose.tools import eq_
-
 from ..type import Base, Type
 
 
@@ -31,16 +29,16 @@ def test_construction_and_variables():
     bars = [Bar("string", 334.34), Bar(False, {"derp": 3.1})]
     foo = Foo(herp, bars)
 
-    eq_(foo.herp, herp)
-    eq_(foo.bars, bars)
-    eq_(foo, Foo(foo))
-    eq_(foo, Foo(foo.to_json()))
+    assert foo.herp == herp
+    assert foo.bars == bars
+    assert foo == Foo(foo)
+    assert foo == Foo(foo.to_json())
 
 
 def test_pickle():
     bar = ExampleJSONable("wat", "herp")
 
-    eq_(bar, pickle.loads(pickle.dumps(bar)))
+    assert bar == pickle.loads(pickle.dumps(bar))
 
 
 def test_repr():
@@ -53,10 +51,9 @@ def test_repr():
 
     bar = Bar(1, "two")
 
-    eq_(
-        repr(bar),
-        "Bar(subherp=1, subderp='two')"
-    )
+    assert (
+        repr(bar) ==
+        "Bar(subherp=1, subderp='two')")
 
 
 def test_abstract_construction_and_variables():
@@ -101,4 +98,4 @@ def test_abstract_construction_and_variables():
     bowl = Bowl([apple, orange])
 
     print(Fruit.REGISTERED_SUB_CLASSES)
-    eq_(bowl, Bowl(bowl.to_json()))
+    assert bowl == Bowl(bowl.to_json())
